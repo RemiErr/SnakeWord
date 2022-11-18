@@ -15,13 +15,13 @@ struct xy
     int y;
 };
 
-enum Scandcode {UP=72, DOWN=80, RIGHT=75, LEFT=77, P=112}; //Scancode
+enum path {UP = 72, DOWN = 80, LEFT = 75, RIGHT = 77, P = 112}; //Scancode
 struct snake
 {
     int n;
     int flag;
     xy body[100];
-    Scandcode scd;
+    path pt;
 }sk;
 
 struct word
@@ -58,7 +58,7 @@ void moveSnake()
     outtextxy(0,700,arr);
 
 
-    switch (sk.scd)
+    switch (sk.pt)
     {
     case UP:
         sk.body[0].y -= SIZE;
@@ -80,20 +80,20 @@ void changePath()
     switch (getch())
     {
     case 72:
-        if (sk.scd != DOWN)
-            sk.scd = UP;
+        if (sk.pt != DOWN)
+            sk.pt = UP;
         break;
     case 80:
-        if (sk.scd != UP)
-            sk.scd = DOWN;
+        if (sk.pt != UP)
+            sk.pt = DOWN;
         break;
     case 75:
-        if (sk.scd != RIGHT)
-            sk.scd = LEFT;
+        if (sk.pt != RIGHT)
+            sk.pt = LEFT;
         break;
     case 77:
-        if (sk.scd != LEFT)
-            sk.scd = RIGHT;
+        if (sk.pt != LEFT)
+            sk.pt = RIGHT;
         break;
     case 112:
         system("pause");
@@ -155,7 +155,7 @@ void GameStart()
     sk.body[0].x = (rand() % 31 + 1)*SIZE;
     sk.body[0].y = (rand() % 24 + 1)*SIZE;
     sk.n = 1;
-    sk.scd = P;
+    sk.pt = P;
     sk.flag = 0;
     wd.flag = 0;
 
