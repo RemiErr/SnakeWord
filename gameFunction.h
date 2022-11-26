@@ -4,22 +4,22 @@
 using namespace std;
 
 #define SIZE 30
-#define winSizeX 960
-#define winSizeY 720
+#define WINDOW_SIZE_WIDTH 960
+#define WINDOW_SIZE_HIGH 720
 
 bool isGameNow = true;
-string FFF = "SNAKE";
+string score;
 struct xy
 {
     int x;
     int y;
 };
 
-enum path {UP = 72, DOWN = 80, LEFT = 75, RIGHT = 77, P = 112}; //Scancode
+enum path {STOP, UP, DOWN, LEFT, RIGHT};
 struct snake
 {
     int n;
-    int flag;
+    bool flag;
     xy body[100];
     path pt;
 }sk;
@@ -27,8 +27,9 @@ struct snake
 struct word
 {
     int n;
-    int flag;
+    int row;
     xy chr[100];
+    string line;
 }wd;
 
 // 蛇功能
@@ -45,7 +46,7 @@ void paintSnake()
 
 void moveSnake()
 {
-    sk.flag = 1;
+    sk.flag = true;
     for (int i=sk.n-1; i > 0; i--)
     {
         sk.body[i].x = sk.body[i-1].x;
@@ -105,42 +106,73 @@ void changePath()
 // 字功能
 void loadWord()
 {
-    // #待新增 - 讀取外部檔案中的單字
-    if (FFF.empty())
-        FFF = "WORD";
+    // 讀取外部檔案中的單字
+    ifstream file("words.txt");
+
+    // 取得檔案長度
+    file.seekg(0, ios::end); // 移動到檔案尾端
+    int flen = file.tellg() + 1; // 取得當前行數
+    file.seekg(0); // 回到頂端
+
+    if (wd.line.empty())
+    {
+        if (file)
+        {
+            wd.row %= flen; 
+            file.seekg(wd.row);
+            getline(file, wd.line);
+        }else{
+            printf("開啟檔案時遇到錯誤");
+        }
+    }
 }
 
 void randomizeWord()
 {
     srand(time(NULL));
-    for (int i=0; i < FFF.length(); i++)
+    for (int i=0; i < wd.line.length(); i++)
     {
         wd.chr[i].x = (rand() % 28 + 2)*SIZE;
         wd.chr[i].y = (rand() % 20 + 2)*SIZE;
-        wd.flag=1; //有食物
     }
 }
+
+// char *printR(string STR)
+// {
+//     char arr[500];
+//     sprintf (arr,"%c", STR);
+//     return arr;
+// }
+// char *printR(char CHR)
+// {
+//     char arr[500];
+//     sprintf (arr,"%c", CHR);
+//     return arr;
+// }
 
 void printWord()
 {
     setcolor(MAGENTA);
-    for (int i=0; i < FFF.length(); i++)
+    for (int i=0; i < wd.line.length(); i++)
     {
-        char arr[50];
-        sprintf(arr,"%c",FFF[i]);
+        char arr[50] = {};
+        sprintf(arr,"%c",wd.line[i]);
         outtextxy(wd.chr[i].x, wd.chr[i].y, arr);
     }
 }
 
 void eatWord()
 {
-    for (int i=0; i < FFF.length(); i++)
+    setcolor(GREEN);
+    char arr[50] = {};
+    sprintf (arr,"score: %d", sk.n - 1);
+    outtextxy(450, 0, arr);
+    for (int i=0; i < wd.line.length(); i++)
     {
         if (sk.body[0].x == wd.chr[i].x && sk.body[0].y == wd.chr[i].y)
         {
             sk.n++;
-            FFF.erase(i,1); // 從 第i個, 刪除 1個值
-            wd.flag=0;
+            wd.line.erase(i, 1); // 從 第i個, 刪除 1個值
         }
     }
 }
@@ -155,9 +187,9 @@ void GameStart()
     sk.body[0].x = (rand() % 31 + 1)*SIZE;
     sk.body[0].y = (rand() % 24 + 1)*SIZE;
     sk.n = 1;
-    sk.pt = P;
-    sk.flag = 0;
-    wd.flag = 0;
+    sk.pt = STOP;
+    sk.flag = false;
+    wd.row = 0;
 
     cleardevice();
     setcolor(WHITE);
@@ -169,14 +201,14 @@ void GameStart()
 void GameOver()
 {
     // 撞牆
-    // if (sk.body[0].x < 0 || sk.body[0].y < 0 || sk.body[0].x > 960 || sk.body[0].y > 720)
+    // if (sk.body[0].x < 0 || sk.body[0].y < 0 || sk.body[0].x > WINDOW_SIZE_WIDTH || sk.body[0].y > WINDOW_SIZE_HIGH)
     //     GameOver();
 
     // 無邊界
-    if (sk.body[0].x < 0) sk.body[0].x = 960;
-    if (sk.body[0].y < 0) sk.body[0].y = 720;
-    if (sk.body[0].x > 960) sk.body[0].x = 0;
-    if (sk.body[0].y > 720) sk.body[0].y = 0;
+    if (sk.body[0].x < 0) sk.body[0].x = WINDOW_SIZE_WIDTH - SIZE;
+    if (sk.body[0].y < 0) sk.body[0].y = WINDOW_SIZE_HIGH - SIZE;
+    if (sk.body[0].x >= WINDOW_SIZE_WIDTH)  sk.body[0].x = 0;
+    if (sk.body[0].y >= WINDOW_SIZE_HIGH)   sk.body[0].y = 0;
 
     // 自撞
     for (int i = sk.n-1; i > 0; i--)

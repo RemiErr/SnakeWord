@@ -29,24 +29,25 @@ int main ()
     void eatWord();
     void loadWord();
 
-    initwindow(winSizeX, winSizeY);
+    initwindow(WINDOW_SIZE_WIDTH, WINDOW_SIZE_HIGH);
     setbkcolor(BLACK);
     GameStart();
     while (true)
     {
         while (isGameNow && !kbhit())
         {
-            if (wd.flag == 0)
+            if (wd.line.empty())
             {
                 loadWord();
                 randomizeWord();
+                wd.row++;
             }
             cleardevice();
             printWord();
             moveSnake();
             paintSnake();
             eatWord();
-            Sleep(200 - (sk.n * 2));
+            Sleep(sk.n < 50 ? 250 - (sk.n * 2) : 150);
             if (sk.flag) GameOver();
         }
         if (!isGameNow) GameStart();
