@@ -15,42 +15,33 @@
 
 #include "gameFunction.h"
 
-
 int main ()
 {
-    // ¨ç¦¡«Å§i
-    void GameStart();
-    void GameOver();
-    void paintSnake();
-    void moveSnake();
-    void changePath();
-    void randomizeWord();
-    void printWord();
-    void eatWord();
-    void loadWord();
-
-    initwindow(WINDOW_SIZE_WIDTH, WINDOW_SIZE_HIGH);
+    srand(time(NULL) + getpid());
+    initwindow(WINDOW_SIZE_WIDTH + BOARD_SIZE_WIDTH, WINDOW_SIZE_HIGH);
     setbkcolor(BLACK);
-    GameStart();
+    initGame();
+    loadWord();
     while (true)
     {
-        while (isGameNow && !kbhit())
+        while (!kbhit())
         {
             if (wd.line.empty())
             {
-                loadWord();
-                randomizeWord();
-                wd.row++;
+                wd.spell = "";
+                wd.line = wd.dict[ rand() % wd.n ];
+                cout<<wd.line<<endl; // #debug
+                randWordPos();
             }
             cleardevice();
             printWord();
             moveSnake();
             paintSnake();
             eatWord();
-            Sleep(sk.n < 50 ? 250 - (sk.n * 2) : 150);
-            if (sk.flag) GameOver();
+            showBoard();
+            delay(sk.n < 50 ? 220 - (sk.n * 2) : 100);
+            GameCore();
         }
-        if (!isGameNow) GameStart();
         changePath();
     }
 }
