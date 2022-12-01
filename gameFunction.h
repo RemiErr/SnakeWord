@@ -31,6 +31,7 @@ struct word
     string dict[255];
     string line;
     string spell;
+    string ans;
 }wd;
 
 // 蛇功能
@@ -145,16 +146,16 @@ void randWordPos()
 {
     for (int i=0; i < wd.line.length(); i++)
     {
-        wd.pos[i].x = (rand() % 31 + 1)*SIZE; // (950 / 30) = 32，邊界向內縮2格
-        wd.pos[i].y = (rand() % 23 + 1)*SIZE; // (720 / 30) = 24
+        wd.pos[i].x = (rand() % 30 + 1)*SIZE; // (950 / 30) = 32，邊界向內縮2格
+        wd.pos[i].y = (rand() % 22 + 1)*SIZE; // (720 / 30) = 24
 
         // 若字元生成在蛇身上，再次設定 x y 座標
         for (int j=0; j < sk.n; j++)
         {
             if (wd.pos[i].x == sk.pos[j].x && wd.pos[i].y == sk.pos[i].y)
             {
-                wd.pos[i].x = (rand() % 31 + 1)*SIZE;
-                wd.pos[i].y = (rand() % 23 + 1)*SIZE;
+                wd.pos[i].x = (rand() % 30 + 1)*SIZE;
+                wd.pos[i].y = (rand() % 22 + 1)*SIZE;
             }
         }
     }
@@ -205,12 +206,12 @@ void showBoard()
 
     char buf_spell[50] = "";
     sprintf (buf_spell,"Spell: ");
-    for (int i = 7; i < wd.spell.length() + 7; i++)
+    for (int i = 0; i < wd.spell.length(); i++)
     {
-        buf_spell[i] = wd.spell[i - 7];
+        buf_spell[i + 7] = wd.spell[i];
     }
     buf_spell[wd.spell.length() + 7] = '\0';
-    outtextxy(WB_WIDTH, 400, buf_spell);
+    outtextxy(WB_WIDTH, 300, buf_spell);
 
     sprintf(buf,"X: %3d, Y: %3d",sk.pos[0].x,sk.pos[0].y);
     outtextxy(WB_WIDTH + 10, WINDOW_SIZE_HIGH - SIZE, buf);

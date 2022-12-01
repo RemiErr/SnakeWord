@@ -22,23 +22,56 @@ int main ()
     setbkcolor(BLACK);
     initGame();
     loadWord();
+    int flag_ans;
     while (true)
     {
+        char buf[30] = {};
         while (!kbhit())
         {
             if (wd.line.empty())
             {
-                wd.spell = "";
-                wd.line = wd.dict[ rand() % wd.n ];
-                cout<<wd.line<<endl; // #debug
+                if (!wd.spell.empty())
+                {
+                    if (wd.spell == wd.ans)
+                    {
+                        flag_ans = 1;
+                    }else{
+                        flag_ans = 2;
+                    }
+                    wd.spell = "";
+                }
+
+                int index = rand() % wd.n;
+                wd.line = wd.dict[index];
+                wd.ans = wd.dict[index];
+                cout<<"Ans: "<<wd.ans<<endl; // #debug
                 randWordPos();
+            }else{
+                flag_ans = 0;
             }
+
+            cleardevice();
+            showBoard();
+            if (flag_ans == 1)
+            {
+                sprintf(buf, "< 恭 喜 答 對 >");
+                outtextxy(WINDOW_SIZE_WIDTH + BOARD_SIZE_WIDTH / 3, 300, buf);
+                delay(1000);
+            }
+            else if (flag_ans == 2)
+            {
+                sprintf(buf, "< 快 去 讀 書 >");
+                outtextxy(WINDOW_SIZE_WIDTH + BOARD_SIZE_WIDTH / 3, 300, buf);
+                delay(1000);
+            }
+
             cleardevice();
             printWord();
             moveSnake();
             paintSnake();
             eatWord();
             showBoard();
+
             delay(sk.n < 50 ? 220 - (sk.n * 2) : 100);
             GameCore();
         }
