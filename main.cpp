@@ -54,14 +54,15 @@ int main ()
             showBoard();
             if (flag_ans == 1)
             {
+                wd.score += 1;
                 sprintf(buf, "< 恭 喜 答 對 >");
                 outtextxy(WINDOW_SIZE_WIDTH + BOARD_SIZE_WIDTH / 3, 300, buf);
                 delay(1000);
             }
             else if (flag_ans == 2)
             {
-                //sk.n--;
-                sprintf(buf, "< 快 去 讀 書 >");
+                wd.score > 0 ? wd.score -= 1 : wd.score = 0;
+                sprintf(buf, "< 可 惜 答 錯 >");
                 outtextxy(WINDOW_SIZE_WIDTH + BOARD_SIZE_WIDTH / 3, 300, buf);
                 delay(1000);
             }

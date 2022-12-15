@@ -4,9 +4,22 @@
 using namespace std;
 
 #define SIZE 30
-#define WINDOW_SIZE_WIDTH 480
-#define WINDOW_SIZE_HIGH 360
+#define WINDOW_SIZE_WIDTH 600
+#define WINDOW_SIZE_HIGH 450
 #define BOARD_SIZE_WIDTH 320
+#define ART_LEN 6
+
+// 計算生成邊界，並向內縮2格
+int sizeW = (WINDOW_SIZE_WIDTH / SIZE) - 2, sizeH = (WINDOW_SIZE_HIGH / SIZE) - 2;
+
+// Font Type: ANSI Shadow
+string ascii_art[ART_LEN] = {
+"╔═══╗─────╔╗─────╔╗╔╗╔╗──────╔╗",
+"║╔═╗║─────║║─────║║║║║║──────║║",
+"║╚══╦═╗╔══╣║╔╦══╗║║║║║╠══╦═╦═╝║",
+"╚══╗║╔╗╣╔╗║╚╝╣║═╣║╚╝╚╝║╔╗║╔╣╔╗║",
+"║╚═╝║║║║╔╗║╔╗╣║═╣╚╗╔╗╔╣╚╝║║║╚╝║",
+"╚═══╩╝╚╩╝╚╩╝╚╩══╝─╚╝╚╝╚══╩╝╚══╝"};
 
 struct xy
 {
@@ -27,6 +40,7 @@ struct word
 {
     int n;
     int row;
+    int score;
     xy pos[255];
     string dict[255];
     string line;
@@ -155,20 +169,30 @@ void loadWord()
 }
 
 void randWordPos()
-{
+{   
     for (int i=0; i < wd.line.length(); i++)
     {
-        wd.pos[i].x = (rand() % 14 + 1)*SIZE; // (480 / 30) = 16，邊界向內縮2格
-        wd.pos[i].y = (rand() % 10 + 1)*SIZE; // (360 / 30) = 12
+        wd.pos[i].x = (rand() % sizeW + 1)*SIZE;
+        wd.pos[i].y = (rand() % sizeH + 1)*SIZE;
 
         // 若字元生成在蛇身上，再次設定 x y 座標
         for (int j=0; j < sk.n; j++)
         {
             if (wd.pos[i].x == sk.pos[j].x && wd.pos[i].y == sk.pos[i].y)
             {
-                wd.pos[i].x = (rand() % 14 + 1)*SIZE;
-                wd.pos[i].y = (rand() % 10 + 1)*SIZE;
+                wd.pos[i].x = (rand() % sizeW + 1)*SIZE;
+                wd.pos[i].y = (rand() % sizeW + 1)*SIZE;
             }
+        }
+    }
+
+    // 若字元生成在字身上，再次設定 x y 座標
+    for (int i = wd.line.length(); i > 0; i--)
+    {
+        if (wd.pos[i].x == wd.pos[i-1].x && wd.pos[i].y == wd.pos[i-1].y)
+        {
+            wd.pos[i].x = (rand() % sizeW + 1)*SIZE;
+            wd.pos[i].y = (rand() % sizeW + 1)*SIZE;
         }
     }
 }
@@ -178,8 +202,7 @@ void printWord()
     setcolor(MAGENTA);
     for (int i=0; i < wd.line.length(); i++)
     {
-        char buf[50];
-        sprintf(buf,"%c", wd.line[i]);
+        char buf[80] = { wd.line[i] };
         outtextxy(wd.pos[i].x, wd.pos[i].y, buf);
     }
 }
@@ -193,8 +216,6 @@ void eatWord()
             sk.n++;
             wd.spell += wd.line[i];
             randWordPos();
-            // wd.pos[i].x = wd.pos[i+1].x;
-            // wd.pos[i].y = wd.pos[i+1].y;
             wd.line.erase(i, 1); // 從 第i個, 刪除 1個值
         }
     }
@@ -211,15 +232,14 @@ void showBoard()
         outtextxy(WINDOW_SIZE_WIDTH, i, "|    ");
     }
 
-    char buf[20] = {};
-    char buf_spell[50] = {};
+    char buf[40] = {};
+    char buf_spell[100] = "Spell: ";
     const int WB_WIDTH = WINDOW_SIZE_WIDTH + 20;
-    sprintf(buf, "Score: %d", (sk.n - 1)*10);
-    outtextxy(WB_WIDTH, 200, buf);
+    sprintf(buf, "Score: %d", wd.score);
+    outtextxy(WB_WIDTH, 100, buf);
 
-    sprintf (buf_spell,"Spell: "); // 純字串也可用 strcpy
     S2C(buf_spell, wd.spell);
-    outtextxy(WB_WIDTH, 300, buf_spell);
+    outtextxy(WB_WIDTH, 200, buf_spell);
 
     sprintf(buf,"X: %3d, Y: %3d",sk.pos[0].x,sk.pos[0].y);
     outtextxy(WB_WIDTH + 10, WINDOW_SIZE_HIGH - SIZE, buf);
@@ -230,20 +250,26 @@ void initGame()
 {
     cleardevice();
 
-    sk.pos[0].x = (rand() % 14 + 1)*SIZE;
-    sk.pos[0].y = (rand() % 10 + 1)*SIZE;
+    sk.pos[0].x = (rand() % sizeW + 1)*SIZE;
+    sk.pos[0].y = (rand() % sizeH + 1)*SIZE;
     sk.n = 1;
     sk.pt = STOP;
     sk.flag = false;
 
     wd.row = 0;
+    wd.score = 0;
     wd.line = "";
     wd.spell = "";
 
     cleardevice();
     setcolor(WHITE);
-    outtextxy((WINDOW_SIZE_WIDTH + BOARD_SIZE_WIDTH) / 2.3, WINDOW_SIZE_HIGH / 3, "Game Start!");
-    outtextxy((WINDOW_SIZE_WIDTH + BOARD_SIZE_WIDTH) / 2.3, WINDOW_SIZE_HIGH / 3 + SIZE*2, "按 P 暫停");
+    for (int i=0; i < ART_LEN; i++)
+    {
+        char Abuf[255] = "";
+        S2C(Abuf, ascii_art[i]);
+        outtextxy((WINDOW_SIZE_WIDTH + BOARD_SIZE_WIDTH) / 4.6, 20*i, Abuf);
+    }
+    outtextxy((WINDOW_SIZE_WIDTH + BOARD_SIZE_WIDTH) / 2.3, WINDOW_SIZE_HIGH / 3 + SIZE*2, "P鍵暫停遊戲");
     delay(2000);
 }
 
@@ -267,7 +293,7 @@ void GameCore()
             cleardevice();
             setcolor(RED);
             outtextxy((WINDOW_SIZE_WIDTH + BOARD_SIZE_WIDTH) / 2.3, WINDOW_SIZE_HIGH / 3, "Game Over!");
-            outtextxy((WINDOW_SIZE_WIDTH + BOARD_SIZE_WIDTH) / 2.3, WINDOW_SIZE_HIGH / 3 + SIZE*2, "在另一個小黑窗中，輸入任意鍵重新開始");
+            outtextxy((WINDOW_SIZE_WIDTH + BOARD_SIZE_WIDTH) / 3.2, WINDOW_SIZE_HIGH / 3 + SIZE*2, "在另一個小黑窗中，輸入任意鍵重新開始");
             system("pause");
             delay(1000);
             initGame();
