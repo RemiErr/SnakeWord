@@ -18,7 +18,7 @@
 int main ()
 {
     srand(time(NULL) + getpid());
-    initwindow(WINDOW_SIZE_WIDTH + BOARD_SIZE_WIDTH, WINDOW_SIZE_HIGH);
+    initwindow(WINDOW_SIZE_WIDTH + BOARD_SIZE_WIDTH, WINDOW_SIZE_HIGH, "Snake Word - «÷¦r³D");
     setbkcolor(BLACK);
     initGame();
     loadWord();

@@ -292,8 +292,8 @@ void GameCore()
         {
             cleardevice();
             setcolor(RED);
-            outtextxy((WINDOW_SIZE_WIDTH + BOARD_SIZE_WIDTH) / 2.3, WINDOW_SIZE_HIGH / 3, "Game Over!");
-            outtextxy((WINDOW_SIZE_WIDTH + BOARD_SIZE_WIDTH) / 3.2, WINDOW_SIZE_HIGH / 3 + SIZE*2, "在另一個小黑窗中，輸入任意鍵重新開始");
+            outtextxy((WINDOW_SIZE_WIDTH + BOARD_SIZE_WIDTH) / 2.4, WINDOW_SIZE_HIGH / 3, "Game Over!");
+            outtextxy((WINDOW_SIZE_WIDTH + BOARD_SIZE_WIDTH) / 3.1, WINDOW_SIZE_HIGH / 3 + SIZE*2, "在另一個小黑窗中，輸入任意鍵重新開始");
             system("pause");
             delay(1000);
             initGame();
