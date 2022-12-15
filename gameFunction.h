@@ -12,7 +12,6 @@ using namespace std;
 // 計算生成邊界，並向內縮2格
 int sizeW = (WINDOW_SIZE_WIDTH / SIZE) - 2, sizeH = (WINDOW_SIZE_HIGH / SIZE) - 2;
 
-// Font Type: ANSI Shadow
 string ascii_art[ART_LEN] = {
 "╔═══╗─────╔╗─────╔╗╔╗╔╗──────╔╗",
 "║╔═╗║─────║║─────║║║║║║──────║║",
@@ -150,22 +149,21 @@ void loadWord()
     // 讀取外部檔案中的單字
     ifstream file("words.txt");
 
-    if (!file) printf("開啟檔案時遇到錯誤");
-
-    // 取得檔案長度
-    file.seekg(0, ios::end); // 移動到檔案尾端
-    wd.n = file.tellg() / 5; // 取得檔案總行數
-    cout<<"seekg: "<<wd.n<<endl; // #debug
-    file.seekg(0); // 回到頂端
-    
-    int i = 0;
-    while (!file.eof())
+    if (file)
     {
-        getline(file, wd.dict[i]); // 建立字典
-        cout<<"dict: "<<wd.dict[i]<<endl; // #debug
-        i++;
+        int i = 0;
+        while (!file.eof())
+        {
+            getline(file, wd.dict[i]); // 建立字典
+            cout<<"dict: "<<wd.dict[i]<<endl; // #debug
+            i++;
+        }
+        wd.n = i; // 取得檔案總行數
+        cout<<"dict count: "<<wd.n<<endl; // #debug
+        file.close();
+    }else{
+        printf("開啟檔案時遇到錯誤");
     }
-    file.close();
 }
 
 void randWordPos()
@@ -229,7 +227,7 @@ void showBoard()
     outtextxy(WINDOW_SIZE_WIDTH + SIZE*2, SIZE, "   -  -   -<   ← ↑ ↓ →   >-   -  -   ");
     for (int i=0; i < WINDOW_SIZE_HIGH; i+=SIZE)
     {
-        outtextxy(WINDOW_SIZE_WIDTH, i, "|    ");
+        outtextxy(WINDOW_SIZE_WIDTH, i, "|        ");
     }
 
     char buf[40] = {};
@@ -267,7 +265,7 @@ void initGame()
     {
         char Abuf[255] = "";
         S2C(Abuf, ascii_art[i]);
-        outtextxy((WINDOW_SIZE_WIDTH + BOARD_SIZE_WIDTH) / 4.6, 20*i, Abuf);
+        outtextxy((WINDOW_SIZE_WIDTH + BOARD_SIZE_WIDTH) / 4.6, 20*(i+1), Abuf);
     }
     outtextxy((WINDOW_SIZE_WIDTH + BOARD_SIZE_WIDTH) / 2.3, WINDOW_SIZE_HIGH / 3 + SIZE*2, "P鍵暫停遊戲");
     delay(2000);
@@ -282,8 +280,8 @@ void GameCore()
     // 無邊界
     if (sk.pos[0].x < 0) sk.pos[0].x = WINDOW_SIZE_WIDTH - SIZE;
     if (sk.pos[0].y < 0) sk.pos[0].y = WINDOW_SIZE_HIGH - SIZE;
-    if (sk.pos[0].x >= WINDOW_SIZE_WIDTH)  sk.pos[0].x = 0;
-    if (sk.pos[0].y >= WINDOW_SIZE_HIGH)   sk.pos[0].y = 0;
+    if (sk.pos[0].x > WINDOW_SIZE_WIDTH - SIZE)  sk.pos[0].x = 0;
+    if (sk.pos[0].y > WINDOW_SIZE_HIGH - SIZE)   sk.pos[0].y = 0;
 
     // 自撞
     for (int i = sk.n-1; i > 0; i--)

@@ -14,6 +14,7 @@
 ***************************/
 
 #include "gameFunction.h"
+#include "process.h"
 
 int main ()
 {
@@ -57,14 +58,14 @@ int main ()
                 wd.score += 1;
                 sprintf(buf, "< ®¥ ³ß µª ¹ï >");
                 outtextxy(WINDOW_SIZE_WIDTH + BOARD_SIZE_WIDTH / 3, 300, buf);
-                delay(1000);
+                delay(300);               
             }
             else if (flag_ans == 2)
             {
                 wd.score > 0 ? wd.score -= 1 : wd.score = 0;
                 sprintf(buf, "< ¥i ±¤ µª ¿ù >");
                 outtextxy(WINDOW_SIZE_WIDTH + BOARD_SIZE_WIDTH / 3, 300, buf);
-                delay(1000);
+                delay(300);
             }
 
             // cleardevice();
