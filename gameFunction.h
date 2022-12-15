@@ -4,8 +4,8 @@
 using namespace std;
 
 #define SIZE 30
-#define WINDOW_SIZE_WIDTH 960
-#define WINDOW_SIZE_HIGH 720
+#define WINDOW_SIZE_WIDTH 480
+#define WINDOW_SIZE_HIGH 360
 #define BOARD_SIZE_WIDTH 320
 
 struct xy
@@ -119,6 +119,18 @@ void changePath()
 }
 
 // 字功能
+void S2C(char A[], string B)
+{ // string 逐個丟入 char[]，同時考慮字串連接問題
+    string temp = B;
+    A[ strlen(A) + temp.length() ] = '\0'; // 尾端需以'\0'做結尾，否則會亂碼
+    while(temp.length())
+    {
+        A[ strlen(A) + temp.length() - 1 ] = temp [ temp.length() - 1 ];
+        temp.erase( temp.length() - 1, 1 ); // 刪除一個元素
+    }
+}
+
+
 void loadWord()
 {
     // 讀取外部檔案中的單字
@@ -146,16 +158,16 @@ void randWordPos()
 {
     for (int i=0; i < wd.line.length(); i++)
     {
-        wd.pos[i].x = (rand() % 30 + 1)*SIZE; // (950 / 30) = 32，邊界向內縮2格
-        wd.pos[i].y = (rand() % 22 + 1)*SIZE; // (720 / 30) = 24
+        wd.pos[i].x = (rand() % 14 + 1)*SIZE; // (480 / 30) = 16，邊界向內縮2格
+        wd.pos[i].y = (rand() % 10 + 1)*SIZE; // (360 / 30) = 12
 
         // 若字元生成在蛇身上，再次設定 x y 座標
         for (int j=0; j < sk.n; j++)
         {
             if (wd.pos[i].x == sk.pos[j].x && wd.pos[i].y == sk.pos[i].y)
             {
-                wd.pos[i].x = (rand() % 30 + 1)*SIZE;
-                wd.pos[i].y = (rand() % 22 + 1)*SIZE;
+                wd.pos[i].x = (rand() % 14 + 1)*SIZE;
+                wd.pos[i].y = (rand() % 10 + 1)*SIZE;
             }
         }
     }
@@ -194,23 +206,19 @@ void showBoard()
     setcolor(GREEN);
     outtextxy(WINDOW_SIZE_WIDTH + SIZE, 0, "= = = = = = = < S.N.A.K.E > = = = = = = =");
     outtextxy(WINDOW_SIZE_WIDTH + SIZE*2, SIZE, "   -  -   -<   ← ↑ ↓ →   >-   -  -   ");
-    const int WB_WIDTH = WINDOW_SIZE_WIDTH + 20;
     for (int i=0; i < WINDOW_SIZE_HIGH; i+=SIZE)
     {
         outtextxy(WINDOW_SIZE_WIDTH, i, "|    ");
     }
 
     char buf[20] = {};
+    char buf_spell[50] = {};
+    const int WB_WIDTH = WINDOW_SIZE_WIDTH + 20;
     sprintf(buf, "Score: %d", (sk.n - 1)*10);
     outtextxy(WB_WIDTH, 200, buf);
 
-    char buf_spell[50] = "";
-    sprintf (buf_spell,"Spell: ");
-    for (int i = 0; i < wd.spell.length(); i++)
-    {
-        buf_spell[i + 7] = wd.spell[i];
-    }
-    buf_spell[wd.spell.length() + 7] = '\0';
+    sprintf (buf_spell,"Spell: "); // 純字串也可用 strcpy
+    S2C(buf_spell, wd.spell);
     outtextxy(WB_WIDTH, 300, buf_spell);
 
     sprintf(buf,"X: %3d, Y: %3d",sk.pos[0].x,sk.pos[0].y);
@@ -222,8 +230,8 @@ void initGame()
 {
     cleardevice();
 
-    sk.pos[0].x = (rand() % 31 + 1)*SIZE;
-    sk.pos[0].y = (rand() % 24 + 1)*SIZE;
+    sk.pos[0].x = (rand() % 14 + 1)*SIZE;
+    sk.pos[0].y = (rand() % 10 + 1)*SIZE;
     sk.n = 1;
     sk.pt = STOP;
     sk.flag = false;

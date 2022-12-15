@@ -1,4 +1,3 @@
-ARPANET
 TCP
 IP
 LAN

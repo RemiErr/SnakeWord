@@ -60,12 +60,13 @@ int main ()
             }
             else if (flag_ans == 2)
             {
+                //sk.n--;
                 sprintf(buf, "< §Ö ¥h Åª ®Ñ >");
                 outtextxy(WINDOW_SIZE_WIDTH + BOARD_SIZE_WIDTH / 3, 300, buf);
                 delay(1000);
             }
 
-            cleardevice();
+            // cleardevice();
             printWord();
             moveSnake();
             paintSnake();
