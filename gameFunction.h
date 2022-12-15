@@ -181,7 +181,7 @@ void randWordPos()
             if (wd.pos[i].x == sk.pos[j].x && wd.pos[i].y == sk.pos[i].y)
             {
                 wd.pos[i].x = (rand() % sizeW + 1)*SIZE;
-                wd.pos[i].y = (rand() % sizeW + 1)*SIZE;
+                wd.pos[i].y = (rand() % sizeH + 1)*SIZE;
             }
         }
     }
@@ -192,7 +192,7 @@ void randWordPos()
         if (wd.pos[i].x == wd.pos[i-1].x && wd.pos[i].y == wd.pos[i-1].y)
         {
             wd.pos[i].x = (rand() % sizeW + 1)*SIZE;
-            wd.pos[i].y = (rand() % sizeW + 1)*SIZE;
+            wd.pos[i].y = (rand() % sizeH + 1)*SIZE;
         }
     }
 }
