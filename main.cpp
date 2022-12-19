@@ -58,17 +58,16 @@ int main ()
                 wd.score += 1;
                 sprintf(buf, "< ®¥ ³ß µª ¹ï >");
                 outtextxy(WINDOW_SIZE_WIDTH + BOARD_SIZE_WIDTH / 3, 300, buf);
-                delay(300);               
+                delay(600);               
             }
             else if (flag_ans == 2)
             {
                 wd.score > 0 ? wd.score -= 1 : wd.score = 0;
                 sprintf(buf, "< ¥i ±¤ µª ¿ù >");
                 outtextxy(WINDOW_SIZE_WIDTH + BOARD_SIZE_WIDTH / 3, 300, buf);
-                delay(300);
+                delay(600);
             }
 
-            // cleardevice();
             printWord();
             moveSnake();
             paintSnake();

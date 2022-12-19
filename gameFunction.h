@@ -7,18 +7,33 @@ using namespace std;
 #define WINDOW_SIZE_WIDTH 600
 #define WINDOW_SIZE_HIGH 450
 #define BOARD_SIZE_WIDTH 320
-#define ART_LEN 6
+#define ART_LEN 21
 
 // нp║те═жи├фм╔бAи├жVд║┴Y2оц
 int sizeW = (WINDOW_SIZE_WIDTH / SIZE) - 2, sizeH = (WINDOW_SIZE_HIGH / SIZE) - 2;
 
 string ascii_art[ART_LEN] = {
-"∙▌вдвдвд∙▀вwвwвwвwвw∙▌∙▀вwвwвwвwвw∙▌∙▀∙▌∙▀∙▌∙▀вwвwвwвwвwвw∙▌∙▀",
-"∙°∙▌вд∙▀∙°вwвwвwвwвw∙°∙°вwвwвwвwвw∙°∙°∙°∙°∙°∙°вwвwвwвwвwвw∙°∙°",
+"б@б@б@б@б@б@б@вiвiвiвiвiвiвiвiвiвi",
+"б@б@б@б@б@б@вiвiб@б@б@б@б@б@б@б@б@б@вiвi",
+"б@б@б@б@б@б@вiвiб@б@б@б@б@б@б@б@б@б@б@б@вiвi",
+"б@б@б@б@вiвiб@б@вiвiб@б@б@б@б@б@вiвiб@б@вiвi",
+"б@б@б@б@вiвiб@б@вiвiб@б@б@б@б@б@вiвiб@б@б@б@вiвi",
+"б@б@б@б@вiвiб@б@б@б@б@б@б@б@б@б@б@б@б@б@б@б@вiвi",
+"б@б@б@б@б@б@вiвiб@б@б@б@б@б@б@б@б@б@б@б@вiвi",
+"б@б@б@б@б@б@б@б@вiвiвiвiвiвiвiвiвiвiвiвiвiвi",
+"б@б@б@б@вiвiвiвiб@б@б@б@вiвiб@б@б@б@б@б@вiвiвiвi",
+"б@б@вiвiб@б@б@б@б@б@вiвiб@б@б@б@б@б@б@б@вiвiб@б@вiвi",
+"вiвiб@б@б@б@вiвiб@б@б@б@б@б@б@б@б@б@вiвiб@б@б@б@б@б@вiвi",
+"вiвiб@б@б@б@б@б@вiвiвiвiвiвiвiвiвiвiб@б@б@б@б@б@вiвiб@б@вiвi",
+"вiвiб@б@б@б@б@б@б@б@б@б@б@б@б@б@б@б@б@б@б@б@б@б@вiвiб@б@вiвi",
+"б@б@вiвiб@б@б@б@б@б@б@б@б@б@б@б@б@б@б@б@б@б@вiвiвiвiб@б@вiвi",
+"б@б@б@б@вiвiвiвiвiвiвiвiвiвiвiвiвiвiвiвiвiвiб@б@б@б@вiвi",
+"∙▌вдвдвд∙▀б@б@б@б@б@∙▌∙▀б@б@б@б@б@∙▌∙▀∙▌∙▀∙▌∙▀б@б@б@б@б@б@∙▌∙▀",
+"∙°∙▌вд∙▀∙°б@б@б@б@б@∙°∙°б@б@б@б@б@∙°∙°∙°∙°∙°∙°б@б@б@б@б@б@∙°∙°",
 "∙°∙увдвд∙▐вд∙▀∙▌вдвд∙т∙°∙▌∙▐вдвд∙▀∙°∙°∙°∙°∙°∙рвдвд∙▐вд∙▐вд∙х∙°",
 "∙увдвд∙▀∙°∙▌∙▀∙т∙▌∙▀∙°∙у∙х∙т∙°вд∙т∙°∙у∙х∙у∙х∙°∙▌∙▀∙°∙▌∙т∙▌∙▀∙°",
 "∙°∙увд∙х∙°∙°∙°∙°∙▌∙▀∙°∙▌∙▀∙т∙°вд∙т∙у∙▀∙▌∙▀∙▌∙т∙у∙х∙°∙°∙°∙у∙х∙°",
-"∙увдвдвд∙ф∙х∙у∙ф∙х∙у∙ф∙х∙у∙фвдвд∙хвw∙у∙х∙у∙х∙увдвд∙ф∙х∙увдвд∙х"};
+"∙увдвдвд∙ф∙х∙у∙ф∙х∙у∙ф∙х∙у∙фвдвд∙хб@∙у∙х∙у∙х∙увдвд∙ф∙х∙увдвд∙х"};
 
 struct xy
 {
@@ -71,22 +86,18 @@ void moveSnake()
     {
     case UP:
         sk.pos[0].y -= SIZE;
-        delay(5);
         sk.flag = false;
         break;
     case DOWN:
         sk.pos[0].y += SIZE;
-        delay(5);
         sk.flag = false;
         break;
     case LEFT:
         sk.pos[0].x -= SIZE;
-        delay(5);
         sk.flag = false;
         break;
     case RIGHT:
         sk.pos[0].x += SIZE;
-        delay(5);
         sk.flag = false;
         break;
     }
@@ -166,31 +177,31 @@ void loadWord()
     }
 }
 
+bool repeatSkPos(int x, int y)
+{
+    for (int j=0; j < sk.n; j++)
+    {
+        if (x == sk.pos[j].x && y == sk.pos[j].y)
+        {
+            cout << "Repeat\n"; // #debug
+            return true;
+        }
+    }
+    return false;
+}
+
 void randWordPos()
 {   
     for (int i=0; i < wd.line.length(); i++)
     {
-        wd.pos[i].x = (rand() % sizeW + 1)*SIZE;
-        wd.pos[i].y = (rand() % sizeH + 1)*SIZE;
+        wd.pos[i].x = (int(rand() % sizeW) + 1)*SIZE;
+        wd.pos[i].y = (int(rand() % sizeH) + 1)*SIZE;
 
-        // нYжrд╕е═жижb│DиндWбAжAж╕│]йw x y оy╝╨
-        for (int j=0; j < sk.n; j++)
+        // нYжrд╕е═жижb│Dин┼щй╬мO┤▓жrк║оy╝╨дWбAжAж╕│]йw x y оy╝╨
+        while ( repeatSkPos(wd.pos[i].x, wd.pos[i].y) || i>0 ? (wd.pos[i].x == wd.pos[i-1].x && wd.pos[i].y == wd.pos[i-1].y) : false )
         {
-            if (wd.pos[i].x == sk.pos[j].x && wd.pos[i].y == sk.pos[i].y)
-            {
-                wd.pos[i].x = (rand() % sizeW + 1)*SIZE;
-                wd.pos[i].y = (rand() % sizeH + 1)*SIZE;
-            }
-        }
-    }
-
-    // нYжrд╕е═жижbжrиндWбAжAж╕│]йw x y оy╝╨
-    for (int i = wd.line.length(); i > 0; i--)
-    {
-        if (wd.pos[i].x == wd.pos[i-1].x && wd.pos[i].y == wd.pos[i-1].y)
-        {
-            wd.pos[i].x = (rand() % sizeW + 1)*SIZE;
-            wd.pos[i].y = (rand() % sizeH + 1)*SIZE;
+            wd.pos[i].x = (int(rand() % sizeW) + 1)*SIZE;
+            wd.pos[i].y = (int(rand() % sizeH) + 1)*SIZE;
         }
     }
 }
@@ -223,16 +234,16 @@ void eatWord()
 void showBoard()
 {
     setcolor(GREEN);
-    outtextxy(WINDOW_SIZE_WIDTH + SIZE, 0, "= = = = = = = < S.N.A.K.E > = = = = = = =");
-    outtextxy(WINDOW_SIZE_WIDTH + SIZE*2, SIZE, "   -  -   -<   бЎ бЇ бї бў   >-   -  -   ");
     for (int i=0; i < WINDOW_SIZE_HIGH; i+=SIZE)
     {
-        outtextxy(WINDOW_SIZE_WIDTH, i, "|        ");
+        outtextxy(WINDOW_SIZE_WIDTH, i, "|б@");
     }
+    outtextxy(WINDOW_SIZE_WIDTH + SIZE, 0, "= = = = = = = < S.N.A.K.E > = = = = = = =");
+    outtextxy(WINDOW_SIZE_WIDTH + SIZE*2, SIZE, "   -  -   -<   бЎ бЇ бї бў   >-   -  -   ");
 
     char buf[40] = {};
     char buf_spell[100] = "Spell: ";
-    const int WB_WIDTH = WINDOW_SIZE_WIDTH + 20;
+    const int WB_WIDTH = WINDOW_SIZE_WIDTH + SIZE*2;
     sprintf(buf, "Score: %d", wd.score);
     outtextxy(WB_WIDTH, 100, buf);
 
@@ -265,10 +276,11 @@ void initGame()
     {
         char Abuf[255] = "";
         S2C(Abuf, ascii_art[i]);
-        outtextxy((WINDOW_SIZE_WIDTH + BOARD_SIZE_WIDTH) / 4.6, 20*(i+1), Abuf);
+        outtextxy((WINDOW_SIZE_WIDTH + BOARD_SIZE_WIDTH) / 4.2, 20*(i+1), Abuf);
     }
-    outtextxy((WINDOW_SIZE_WIDTH + BOARD_SIZE_WIDTH) / 2.3, WINDOW_SIZE_HIGH / 3 + SIZE*2, "P┴ф╝╚░▒╣C└╕");
-    delay(2000);
+    setcolor(DARKGRAY);
+    outtextxy(0, WINDOW_SIZE_HIGH - SIZE, "дшжV┴ф▒▒июбAP┴ф╝╚░▒╣C└╕");
+    delay(3500);
 }
 
 void GameCore()
@@ -293,7 +305,7 @@ void GameCore()
             outtextxy((WINDOW_SIZE_WIDTH + BOARD_SIZE_WIDTH) / 2.4, WINDOW_SIZE_HIGH / 3, "Game Over!");
             outtextxy((WINDOW_SIZE_WIDTH + BOARD_SIZE_WIDTH) / 3.1, WINDOW_SIZE_HIGH / 3 + SIZE*2, "жbеtд@н╙дp╢┬╡бддбA┐щдJеЇ╖N┴фнл╖s╢}йl");
             system("pause");
-            delay(1000);
+            delay(2000);
             initGame();
         }
     }
